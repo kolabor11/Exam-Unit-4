@@ -28,3 +28,27 @@ class LogFileParser
         return sessionData;
     }
 }
+
+class CLIApp
+{
+    static void Main(string[] args)
+    {
+        if (args.Length == 0)
+        {
+            Console.WriteLine("Usage: log-parser <log-file-path>");
+            return;
+        }
+
+        var logFileParser = new LogFileParser();
+        var sessionData = logFileParser.ParseLogFile(args[0]);
+
+        foreach (var session in sessionData)
+        {
+            Console.WriteLine($"Session: {session.Key}");
+            Console.WriteLine($"Total time: {session.Value.times.Sum()} seconds");
+            Console.WriteLine($"Total fails: {session.Value.fails}");
+        }
+    }
+}
+
+
