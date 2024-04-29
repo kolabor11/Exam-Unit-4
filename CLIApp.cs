@@ -2,14 +2,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 class LogFileParser
 {
-    public Dictionary<string, (List<int> times, int fails)> ParseLogFile(string logFilePath)
+    public static Dictionary<string, (List<int> times, int fails)> ParseLogFile(string logFilePath)
     {
         var sessionData = new Dictionary<string, (List<int> times, int fails)>();
         string sessionName = Path.GetFileNameWithoutExtension(logFilePath);
-        List<int> times = new List<int>();
+        var times = new List<int>();
         int fails = 0;
 
         foreach (string line in File.ReadLines(logFilePath))
@@ -29,26 +30,38 @@ class LogFileParser
     }
 }
 
-class CLIApp
+class PhyscialGameSummary
 {
     static void Main(string[] args)
     {
         if (args.Length == 0)
         {
+            Console.WriteLine("Error: No log file path provided.");
             Console.WriteLine("Usage: log-parser <log-file-path>");
             return;
         }
 
-        var logFileParser = new LogFileParser();
-        var sessionData = logFileParser.ParseLogFile(args[0]);
+        string logFilePath = args[0];
+        if (!File.Exists(logFilePath))
+        {
+            Console.WriteLine($"Error: Log file '{logFilePath}' not found.");
+            return;
+        }
+
+        var sessionData = LogFileParser.ParseLogFile(logFilePath);
+
+        if (sessionData.Count == 0)
+        {
+            Console.WriteLine("No data found in the log file.");
+            return;
+        }
 
         foreach (var session in sessionData)
         {
             Console.WriteLine($"Session: {session.Key}");
             Console.WriteLine($"Total time: {session.Value.times.Sum()} seconds");
+            Console.WriteLine($"Average time: {session.Value.times.Average()} seconds");
             Console.WriteLine($"Total fails: {session.Value.fails}");
         }
     }
 }
-
-
