@@ -1,0 +1,30 @@
+NFPKTV1                     [START]: 29/04/2024 21:05:20
+NFPKTV1                     [TIME]: 910
+NFPKTV1                     [TIME]: 700
+NFPKTV1                     [TIME]: 630
+NFPKTV1            	         [TIME]: 570
+NFPKTV1            
+         [TIME]: 1220
+NFPKTV1                     [TIME]: 1060
+NFPKTV1                     [TIME]: 1200
+NFPKTV1                     [TIME]: 1700
+NFPKTV1                     [TIME]: 780
+NFPKTV1                     [TIME]: 660
+NFPKTV1                     [TIME]: 930
+NFPKTV1                     [TIME]: 570
+NFPKTV1                     [TIME]: 530
+NFPKTV1                     [TIME]: 750
+NFPKTV1                     [TIME]: 430
+NFPKTV1                     [TIME]: 1050
+NFPKTV1                     [TIME]: 990
+NFPKTV1                     [TIME]: 3540
+NFPKTV1                     [FAIL]: TimeOut
+NFPKTV1                     [END]
+NFPKTV1                     [START]: 29/04/2024 21:05:51
+NFPKTV1                     [TIME]: 900
+NFPKTV1                     [TIME]: 660
+NFPKTV1                     [TIME]: 990
+NFPKTV1                     [TIME]: 1050
+NFPKTV1                     [FAIL]: WrongButton
+NFPKTV1                      [END]
+NFPKTV1            !         [TIME]: 600

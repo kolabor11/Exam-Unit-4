@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -9,23 +7,56 @@ class LogFileParser
     public static Dictionary<string, (List<int> times, int fails)> ParseLogFile(string logFilePath)
     {
         var sessionData = new Dictionary<string, (List<int> times, int fails)>();
-        string sessionName = Path.GetFileNameWithoutExtension(logFilePath);
-        var times = new List<int>();
-        int fails = 0;
 
-        foreach (string line in File.ReadLines(logFilePath))
+        try
         {
-            if (line.StartsWith("[TIME]"))
+            using var reader = new StreamReader(logFilePath);
+            string sessionName = string.Empty;
+            var times = new List<int>();
+            int fails = 0;
+
+            string line;
+            while ((line = reader.ReadLine()) != null)
             {
-                times.Add(int.Parse(line.Split(": ")[1]));
-            }
-            else if (line.StartsWith("[FAIL]"))
-            {
-                fails++;
+                string[] parts = line.Split(':');
+                if (parts.Length >= 2)
+                {
+                    string code = parts[0].Trim();
+                    string logEntry = parts[1].Trim();
+
+                    if (logEntry.StartsWith("[START]"))
+                    {
+                        sessionName = code;
+                        times = new List<int>();
+                        fails = 0;
+                    }
+                    else if (logEntry.StartsWith("[TIME]"))
+                    {
+                        if (int.TryParse(logEntry.Split(": ")[1], out int time))
+                        {
+                            times.Add(time);
+                        }
+                    }
+                    else if (logEntry.StartsWith("[FAIL]"))
+                    {
+                        fails++;
+                    }
+                    else if (logEntry.StartsWith("[END]"))
+                    {
+                        if (sessionName != null)
+                        {
+                            sessionData.Add(sessionName, (times, fails));
+                            sessionName = null;
+                        }
+                    }
+                }
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error parsing log file: {ex.Message}");
+        }
 
-        sessionData[sessionName] = (times, fails);
         return sessionData;
     }
 }
@@ -60,7 +91,9 @@ class PhyscialGameSummary
         {
             Console.WriteLine($"Session: {session.Key}");
             Console.WriteLine($"Total time: {session.Value.times.Sum()} seconds");
-            Console.WriteLine($"Average time: {session.Value.times.Average()} seconds");
+            double averageTime = session.Value.times.Average();
+            Console.WriteLine($"Average time: {averageTime:F2} seconds");
+
             Console.WriteLine($"Total fails: {session.Value.fails}");
         }
     }
